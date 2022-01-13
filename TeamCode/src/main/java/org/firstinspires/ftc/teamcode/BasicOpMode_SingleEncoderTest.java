@@ -33,7 +33,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -50,16 +49,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoEncoderTest2")
+@Autonomous(name="SingleEncoderTest")
 // @Disabled
-public class BasicOpMode_EncoderTest2 extends LinearOpMode {
+public class BasicOpMode_SingleEncoderTest extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
+    private DcMotor motor = null;
 
     //@Disabled
 
@@ -71,17 +67,12 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        motor  = hardwareMap.get(DcMotor.class, "Motor");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        motor.setDirection(DcMotor.Direction.REVERSE);
+
 
         final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: NeveRest40 Motor Encoder
         final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
@@ -91,17 +82,11 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
         final double     DRIVE_SPEED             = 0.5;
         final double     TURN_SPEED              = 1;
 
-        stop_reset_encoders();
-        int newLeftFrontTarget;
-        int newRightFrontTarget;
-        int newLeftBackTarget;
-        int newRightBackTarget;
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        double leftFrontInches = -10.6;
-        double leftBackInches = 10.6;
-        double rightFrontInches = -10.6;
-        double rightBackInches = 10.6;
+        int newMotorTarget;
 
+        double motorInches = -10.6;
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -114,58 +99,33 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Status", "Right Front Encoder: " + rightFrontDrive.getCurrentPosition());
-            telemetry.update();
-
             sleep(5000);
 
-            //newLeftFrontTarget = leftFrontDrive.getCurrentPosition() + (int)(leftFrontInches * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFrontDrive.getCurrentPosition() + (int)(rightFrontInches * COUNTS_PER_INCH);
-            //newLeftBackTarget = leftBackDrive.getCurrentPosition() + (int)(leftBackInches * COUNTS_PER_INCH);
-            newRightBackTarget = rightBackDrive.getCurrentPosition() + (int)(rightBackInches * COUNTS_PER_INCH);
-            //leftFrontDrive.setTargetPosition(newLeftFrontTarget);
-            rightFrontDrive.setTargetPosition(newRightFrontTarget);
-            //leftBackDrive.setTargetPosition(newLeftBackTarget);
-            rightBackDrive.setTargetPosition(newRightBackTarget);
+
+            newMotorTarget = motor.getCurrentPosition() + (int)(motorInches * COUNTS_PER_INCH);
+
+
+            motor.setTargetPosition(newMotorTarget);
+
 
             // Turn On RUN_TO_POSITION
-            go_to_position();
+
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            //leftFrontDrive.setPower(Math.abs(DRIVE_SPEED));
-            rightFrontDrive.setPower(Math.abs(DRIVE_SPEED));
-            //leftBackDrive.setPower(Math.abs(DRIVE_SPEED));
-            rightBackDrive.setPower(Math.abs(DRIVE_SPEED));
+           motor.setPower(Math.abs(DRIVE_SPEED));
 
             // Show encoder value
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
-            telemetry.update();
+
 
             sleep(10000);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
+            telemetry.addData("Encoder", "Motor: " + motor.getCurrentPosition());
             telemetry.update();
         }
-
-
-    }
-
-    public void go_to_position(){
-        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
-    public void stop_reset_encoders() {
-        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

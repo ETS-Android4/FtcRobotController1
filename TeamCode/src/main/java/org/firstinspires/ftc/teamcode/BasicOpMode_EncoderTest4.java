@@ -30,10 +30,8 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -50,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="AutoEncoderTest2")
+@Autonomous(name="AutoEncoderTest4")
 // @Disabled
-public class BasicOpMode_EncoderTest2 extends LinearOpMode {
+public class BasicOpMode_EncoderTest4 extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -114,9 +112,7 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Status", "Right Front Encoder: " + rightFrontDrive.getCurrentPosition());
-            telemetry.update();
+            telemetryupdate();
 
             sleep(5000);
 
@@ -141,19 +137,23 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
 
             // Show encoder value
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
-            telemetry.update();
+            telemetryupdate();
 
             sleep(10000);
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
-            telemetry.update();
+            telemetryupdate();
         }
 
 
+    }
+    public void telemetryupdate() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Front Right: " + rightFrontDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Back Left: " + leftBackDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Back Right: " + rightBackDrive.getCurrentPosition());
+        telemetry.update();
     }
 
     public void go_to_position(){
@@ -168,4 +168,6 @@ public class BasicOpMode_EncoderTest2 extends LinearOpMode {
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+
 }

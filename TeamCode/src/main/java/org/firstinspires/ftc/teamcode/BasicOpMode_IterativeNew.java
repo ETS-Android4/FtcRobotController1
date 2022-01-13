@@ -29,12 +29,17 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 /**
@@ -51,9 +56,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@TeleOp(name="Basic: IterativeNew OpMode", group="Iterative Opmode")
 // @Disabled
-public class BasicOpMode_Iterative extends OpMode
+public class BasicOpMode_IterativeNew extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -61,6 +66,9 @@ public class BasicOpMode_Iterative extends OpMode
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
+    private CRServo slide = null;
+    private DcMotor intake = null;
+
 
     double speedMultiplier = 1;
 
@@ -74,11 +82,16 @@ public class BasicOpMode_Iterative extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        // Declare our motors
+        DcMotor leftFrontDrive = hardwareMap.dcMotor.get("leftFrontDrive");
+        DcMotor leftBackDrive = hardwareMap.dcMotor.get("leftBackDrive");
+        DcMotor rightFrontDrive = hardwareMap.dcMotor.get("rightFrontDrive");
+        DcMotor rightBackDrive = hardwareMap.dcMotor.get("rightBackDrive");
+        DcMotor intake = hardwareMap.dcMotor.get("intake");
+        CRServo slide = hardwareMap.CRservo.get("slide");
 
+        rightFrontDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -140,6 +153,24 @@ public class BasicOpMode_Iterative extends OpMode
             leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
             rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x + (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
             rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
+
+            slide.setPower(gamepad1.right_trigger);
+            slide.setPower(-gamepad1.left_trigger);
+        }
+        //Engage Linear Slide
+        if (gamepad1.a) {
+            slide.setPower(0.5);
+        } else {
+            slide.setPower(0);
+        }
+        if (gamepad1.b) {
+            slide.setPower(-0.5);
+        } else {
+            slide.setPower(0);
+        }
+        //Intake
+        if (gamepad1.x) {
+            intake.setPower(-1);
         }
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -29,11 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -51,16 +49,13 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: Iterative OpMode", group="Iterative Opmode")
+@TeleOp(name="Basic: IterativeSingleMotorTest OpMode", group="Iterative Opmode")
 // @Disabled
-public class BasicOpMode_Iterative extends OpMode
+public class BasicOpMode_IterativeSingleMotorTest extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftFrontDrive = null;
-    private DcMotor rightFrontDrive = null;
-    private DcMotor leftBackDrive = null;
-    private DcMotor rightBackDrive = null;
+    private DcMotor motor = null;
 
     double speedMultiplier = 1;
 
@@ -74,18 +69,11 @@ public class BasicOpMode_Iterative extends OpMode
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftFrontDrive  = hardwareMap.get(DcMotor.class, "left_front_drive");
-        rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
-        leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
-        rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        motor  = hardwareMap.get(DcMotor.class, "Motor");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-
+        motor.setDirection(DcMotor.Direction.REVERSE);
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
     }
@@ -113,34 +101,15 @@ public class BasicOpMode_Iterative extends OpMode
     public void loop() {
         // Setup a variable for each drive wh
 
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
-
-        speedMultiplier = Range.clip((1.25 - gamepad1.left_trigger),0 , 1);
-
         if(gamepad1.left_bumper)
         {
-            leftBackDrive.setPower(1 * speedMultiplier);
-            leftFrontDrive.setPower(-1 * speedMultiplier);
-            rightFrontDrive.setPower(1 * speedMultiplier);
-            rightBackDrive.setPower(-1 * speedMultiplier);
+            motor.setPower(0.5);
         }
         if(gamepad1.right_bumper)
         {
-            leftBackDrive.setPower(-1 * speedMultiplier);
-            leftFrontDrive.setPower(1 * speedMultiplier);
-            rightFrontDrive.setPower(-1 * speedMultiplier);
-            rightBackDrive.setPower(1 * speedMultiplier);
+            motor.setPower(-0.5);
         } // Send calculated power to wheels
-        if(true)
-        {
-            leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x + (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x + (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-        }
+
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
 
