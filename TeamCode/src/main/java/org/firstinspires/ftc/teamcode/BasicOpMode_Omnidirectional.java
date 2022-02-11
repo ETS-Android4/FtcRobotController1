@@ -32,12 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
 /**
@@ -54,9 +52,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Basic: IterativeNew OpMode", group="Iterative Opmode")
-@Disabled
-public class BasicOpMode_IterativeNew extends OpMode
+@TeleOp(name="Basic: Omnidirectional OpMode", group="Iterative Opmode")
+//@Disabled
+public class BasicOpMode_Omnidirectional extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -139,7 +137,7 @@ public class BasicOpMode_IterativeNew extends OpMode
         GP2speedMultiplier = Range.clip((1.25 - gamepad2.left_trigger), 0, 1);
 
         //Strafing
-        if (gamepad1.left_bumper) {
+        /*if (gamepad1.left_bumper) {
             leftBackDrive.setPower(1 * speedMultiplier);
             leftFrontDrive.setPower(-1 * speedMultiplier);
             rightFrontDrive.setPower(1 * speedMultiplier);
@@ -150,14 +148,27 @@ public class BasicOpMode_IterativeNew extends OpMode
             leftFrontDrive.setPower(1 * speedMultiplier);
             rightFrontDrive.setPower(-1 * speedMultiplier);
             rightBackDrive.setPower(1 * speedMultiplier);
-        } // Send calculated power to wheels
+        }*/
 
-        if (true) {
-            leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x + (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x + (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
-            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.left_stick_y) - gamepad1.right_stick_y), -1, 1) * speedMultiplier);
+        // Send calculated power to wheels
+        if (gamepad1.y) {
+            leftBackDrive.setPower(1 * speedMultiplier);
+            rightBackDrive.setPower(1 * speedMultiplier);
+            leftFrontDrive.setPower(-1 * speedMultiplier);
+            rightFrontDrive.setPower(-1 * speedMultiplier);
+        } else if(gamepad1.a) {
+            leftBackDrive.setPower(-1 * speedMultiplier);
+            rightBackDrive.setPower(-1 * speedMultiplier);
+            leftFrontDrive.setPower(1 * speedMultiplier);
+            rightFrontDrive.setPower(1 * speedMultiplier);
+        } else {
+            leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
+            rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) + gamepad1.right_stick_x), -1, 1) * speedMultiplier);
+            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) + gamepad1.right_stick_x), -1, 1) * speedMultiplier);
+            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
+
         }
+
 
         //Duck Spinner
         if (gamepad1.x) {
@@ -169,12 +180,11 @@ public class BasicOpMode_IterativeNew extends OpMode
         }
 
 
-
         //Movement for the servo to drop off cubes/spheres
-        if (gamepad1.y) {
+        if (gamepad2.right_bumper) {
             slideServo.setPower(0.5 * GP2speedMultiplier);
             telemetry.addData("Status", slideServo.getPower());
-        } else if (gamepad1.a) {
+        } else if (gamepad2.left_bumper) {
             slideServo.setPower(-0.5 * GP2speedMultiplier);
             telemetry.addData("Status", slideServo.getPower());
         } else {
@@ -183,18 +193,18 @@ public class BasicOpMode_IterativeNew extends OpMode
 
         //Intake
         if (gamepad2.x) {
-            intake.setPower(-1 * speedMultiplier);
+            intake.setPower(-1 * GP2speedMultiplier);
         } else if (gamepad2.b) {
-            intake.setPower(1 * speedMultiplier);
+            intake.setPower(1 * GP2speedMultiplier);
         } else {
             intake.setPower(0);
         }
 
         //Slide
         if (gamepad2.y) {
-            DCslide.setPower(-0.5 * speedMultiplier);
+            DCslide.setPower(-0.5 * GP2speedMultiplier);
         } else if (gamepad2.a) {
-            DCslide.setPower(0.5 * speedMultiplier);
+            DCslide.setPower(0.5 * GP2speedMultiplier);
         } else {
             DCslide.setPower(0);
         }

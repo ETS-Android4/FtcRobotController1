@@ -32,7 +32,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,9 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="NorthEastCornerAuto")
+@Autonomous(name="Auto2NorthEastCorner")
 @Disabled
-public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
+public class BasicOpMode_2NorthEastCorner extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -60,9 +59,6 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
-    private CRServo slideServo = null;
-    private DcMotor intake = null;
-    private DcMotor DCslide = null;
 
     @Override
     public void runOpMode() {
@@ -76,9 +72,6 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        DCslide = hardwareMap.get(DcMotor.class, "slide");
-        slideServo = hardwareMap.get(CRServo.class, "slideServo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -86,9 +79,6 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        slideServo.setDirection(CRServo.Direction.FORWARD);
-        DCslide.setDirection(CRServo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -104,18 +94,27 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
-
             // Send calculated power to wheels
-            leftFrontDrive.setPower(-0.5);
-            leftBackDrive.setPower(0.5);
-            rightBackDrive.setPower(-0.5);
+
+            //Forward
             rightFrontDrive.setPower(0.5);
-            sleep(2500);
-            rightFrontDrive.setPower(1);
-            leftFrontDrive.setPower(1);
-            leftBackDrive.setPower(1);
+            leftFrontDrive.setPower(0.5);
+            leftBackDrive.setPower(0.5);
+            rightBackDrive.setPower(0.5);
+            sleep(1000);
+            //Right turn
+            rightBackDrive.setPower(-0.7);
+            rightFrontDrive.setPower(-0.7);
+            leftBackDrive.setPower(0.7);
+            leftFrontDrive.setPower(0.7);
+            sleep(1000);
+            //Forward
             rightBackDrive.setPower(1);
+            rightFrontDrive.setPower(1);
+            leftBackDrive.setPower(1);
+            leftFrontDrive.setPower(1);
             sleep(2000);
+            //Stop
             rightBackDrive.setPower(0);
             rightFrontDrive.setPower(0);
             leftBackDrive.setPower(0);
