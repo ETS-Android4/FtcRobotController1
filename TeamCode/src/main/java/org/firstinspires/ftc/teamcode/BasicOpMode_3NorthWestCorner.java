@@ -30,9 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="NorthEastCornerAuto")
-@Disabled
-public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
+@Autonomous(name="3NorthWest")
+//@Disabled
+public class BasicOpMode_3NorthWestCorner extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -60,9 +58,16 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
-    private CRServo slideServo = null;
-    private DcMotor intake = null;
-    private DcMotor DCslide = null;
+
+    final double     COUNTS_PER_MOTOR_REV    = 11200 ;    // eg: NeveRest40 Motor Encoder
+    final double     DRIVE_GEAR_REDUCTION    = 1 ;     // This is < 1.0 if geared UP
+    final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / 12.5663706;
+
+    int newRightFrontTarget;
+    int newRightBackTarget;
+    int newLeftFrontTarget;
+    int newLeftBackTarget;
 
     @Override
     public void runOpMode() {
@@ -76,9 +81,6 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
-        intake = hardwareMap.get(DcMotor.class, "intake");
-        DCslide = hardwareMap.get(DcMotor.class, "slide");
-        slideServo = hardwareMap.get(CRServo.class, "slideServo");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -86,9 +88,6 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        intake.setDirection(DcMotor.Direction.FORWARD);
-        slideServo.setDirection(CRServo.Direction.FORWARD);
-        DCslide.setDirection(CRServo.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -97,39 +96,69 @@ public class BasicOpMode_NorthEastCornerAuto extends LinearOpMode {
         boolean stop = false;
 
         // run until the end of the match (driver presses STOP)
-        while ((opModeIsActive() & stop) == false) {
-
-
-
-            // Choose to drive using either Tank Mode, or POV Mode
-            // Comment out the method that's not used.  The default below is POV.
-
+        while (opModeIsActive() & stop == false) {
+            stop_reset_encoders();
 
             // Send calculated power to wheels
-            leftFrontDrive.setPower(-0.5);
-            leftBackDrive.setPower(0.5);
-            rightBackDrive.setPower(-0.5);
-            rightFrontDrive.setPower(0.5);
-            sleep(2500);
-            rightFrontDrive.setPower(1);
-            leftFrontDrive.setPower(1);
-            leftBackDrive.setPower(1);
-            rightBackDrive.setPower(1);
-            sleep(2000);
-            rightBackDrive.setPower(0);
-            rightFrontDrive.setPower(0);
-            leftBackDrive.setPower(0);
-            leftFrontDrive.setPower(0);
+
+            set_position(5);
+            go_to_position();
+
+            telemetry_update();
+
+            leftFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() + (int)(10.205 * COUNTS_PER_INCH));
+            leftBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() + (int)(10.205 * COUNTS_PER_INCH));
+
+            telemetry_update();
+
+            move(1, 3000);
+
+            telemetry_update();
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString()); //s
-            telemetry.update();
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-
+            telemetry_update();
             stop = true;
         }
+    }
+    public void telemetry_update() {
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Encoder", "Front Left: " + leftFrontDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Front Right: " + rightFrontDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Back Left: " + leftBackDrive.getCurrentPosition());
+        telemetry.addData("Encoder", "Back Right: " + rightBackDrive.getCurrentPosition());
+        telemetry.update();
+    }
+
+    public void go_to_position(){
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+    public void stop_reset_encoders() {
+        rightFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void set_position(int position) {
+        rightFrontDrive.setTargetPosition(rightFrontDrive.getCurrentPosition() + (int)(position * COUNTS_PER_INCH));
+        rightBackDrive.setTargetPosition(rightBackDrive.getCurrentPosition() + (int)(position * COUNTS_PER_INCH));
+        leftFrontDrive.setTargetPosition(leftFrontDrive.getCurrentPosition() + (int)(position * COUNTS_PER_INCH));
+        leftBackDrive.setTargetPosition(leftBackDrive.getCurrentPosition() + (int)(position * COUNTS_PER_INCH));
+
+    }
+    public void move(int speed, int time) {
+        rightFrontDrive.setPower(speed);
+        leftFrontDrive.setPower(speed);
+        leftBackDrive.setPower(speed);
+        rightBackDrive.setPower(speed);
+
+        sleep(time);
+
+        rightFrontDrive.setPower(0);
+        leftFrontDrive.setPower(0);
+        leftBackDrive.setPower(0);
+        rightBackDrive.setPower(0);
     }
 }
