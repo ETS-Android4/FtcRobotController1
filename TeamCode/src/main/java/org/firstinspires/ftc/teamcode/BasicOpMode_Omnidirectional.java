@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -38,6 +37,95 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
+/**
+ * This file contains an example of an iterative (Non-Linear) "OpMode".
+ * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
+ * The names of OpModes appear on the menu of the FTC Driver Station.
+ * When an selection is made from the menu, the corresponding OpMode
+ * class is instantiated on the Robot Controller and executed.
+ *
+ *                     TeleOP Controls
+ *       _=====_                               _=====_
+ *      / _____ \                             / _____ \
+ *    /.-'_____'-.---------------------------.-'_____'-\
+ *   /   |     |  '.        L O G I        .'  |     |   \
+ *  / ___| /|\ |___ \                     / ___| (Y) |___ \
+ * / |      |      | ;  __           _   ; |             | ;
+ * | | <---   ---> | | |__|         |_|  | |(X)       (B)| |
+ * | |___   |   ___| ; SELECT      START ; |___       ___| ;
+ * |\    | \|/ |    /  _     ___      _   \    | (A) |    /|
+ * | \   |_____|  .','" "', |___|  ,'" "', '.  |_____|  .' |
+ * |  '-.______.-' /       \ANALOG/       \  '-._____.-'   |
+ * |               |       |------|       |                |
+ * |              /\       /      \       /\               |
+ * |             /  '.___.'        '.___.'  \              |
+ * |            /                            \             |
+ *  \          /                              \           /
+ *   \________/                                \_________/
+ *                         Gamepad 1:
+ *
+ * gamepad1.dpad_up :
+ * gamepad1.dpad_left :
+ * gamepad1.dpad_right :
+ * gamepad1.dpad_down :
+ * gamepad1.a :
+ * gamepad1.x : Duck
+ * gamepad1.b :
+ * gamepad1.y :
+ * gamepad1.left_trigger :
+ * gamepad1.left_bumper :
+ * gamepad1.right_trigger :
+ * gamepad1.right_bumper :
+ * gamepad1.left_stick_y :
+ * gamepad1.left_stick_x :
+ * gamepad1.right_stick_y :
+ * gamepad1.right_stick_x :
+ * gamepad1.left_stick_button :
+ * gamepad1.right_stick_button :
+ * gamepad1.start :
+ * gamepad1.back :
+ *
+ *                      TeleOP Controls
+ *        _=====_                               _=====_
+ *       / _____ \                             / _____ \
+ *     /.-'_____'-.---------------------------.-'_____'-\
+ *    /   |     |  '.        L O G I        .'  |     |   \
+ *   / ___| /|\ |___ \                     / ___| (Y) |___ \
+ *  / |      |      | ;  __           _   ; |             | ;
+ *  | | <---   ---> | | |__|         |_|  | |(X)       (B)| |
+ *  | |___   |   ___| ; SELECT      START ; |___       ___| ;
+ *  |\    | \|/ |    /  _     ___      _   \    | (A) |    /|
+ *  | \   |_____|  .','" "', |___|  ,'" "', '.  |_____|  .' |
+ *  |  '-.______.-' /       \ANALOG/       \  '-._____.-'   |
+ *  |               |       |------|       |                |
+ *  |              /\       /      \       /\               |
+ *  |             /  '.___.'        '.___.'  \              |
+ *  |            /                            \             |
+ *   \          /                              \           /
+ *    \________/                                \_________/
+ *                          Gamepad 2
+ *
+ * gamepad2.dpad_up :
+ * gamepad2.dpad_left :
+ * gamepad2.dpad_right :
+ * gamepad2.dpad_down :
+ * gamepad2.a :
+ * gamepad2.x :
+ * gamepad2.b :
+ * gamepad2.y :
+ * gamepad2.left_trigger :
+ * gamepad2.left_bumper :
+ * gamepad2.right_trigger :
+ * gamepad2.right_bumper :
+ * gamepad2.left_stick_y :
+ * gamepad2.left_stick_x :
+ * gamepad2.right_stick_y :
+ * gamepad2.right_stick_x :
+ * gamepad2.left_stick_button :
+ * gamepad2.right_stick_button :
+ * gamepad2.start :
+ * gamepad2.back :
+ */
 /**
  * This file contains an example of an iterative (Non-Linear) "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -181,10 +269,10 @@ public class BasicOpMode_Omnidirectional extends OpMode
 
 
         //Movement for the servo to drop off cubes/spheres
-        if (gamepad2.right_bumper) {
+        if (gamepad2.left_bumper) {
             slideServo.setPower(0.5 * GP2speedMultiplier);
             telemetry.addData("Status", slideServo.getPower());
-        } else if (gamepad2.left_bumper) {
+        } else if (gamepad2.right_bumper) {
             slideServo.setPower(-0.5 * GP2speedMultiplier);
             telemetry.addData("Status", slideServo.getPower());
         } else {
@@ -202,9 +290,9 @@ public class BasicOpMode_Omnidirectional extends OpMode
 
         //Slide
         if (gamepad2.y) {
-            DCslide.setPower(-0.5 * GP2speedMultiplier);
+            DCslide.setPower(-1 * GP2speedMultiplier);
         } else if (gamepad2.a) {
-            DCslide.setPower(0.5 * GP2speedMultiplier);
+            DCslide.setPower(1 * GP2speedMultiplier);
         } else {
             DCslide.setPower(0);
         }

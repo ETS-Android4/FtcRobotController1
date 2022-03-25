@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @Autonomous(name="3SouthWest")
-//@Disabled
+@Disabled
 public class BasicOpMode_3SouthWestCorner extends LinearOpMode {
 
     // Declare OpMode members.
