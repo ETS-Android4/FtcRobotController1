@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
+
 /**
  * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without
  * the need for an external robot class. This will allow you to do some cool things like
@@ -23,23 +24,30 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 public class BasicOcMode_6SouthWestCorner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        // Initialize SampleMecanumDrive
+        telemetryUpdateLine(27);
+        //Initialize SampleMecanumDrive
         Definitions robot = new Definitions();
         CRServo slideServo;
         DcMotor slide;
         DcMotor spinner;
-
+        telemetryUpdateLine(33);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        telemetryUpdateLine(36);
         robot.robotHardwareMapInit(hardwareMap);
+        telemetryUpdateLine(38);
         robot.driveInit();
+        telemetryUpdateLine(40);
         slideServo = hardwareMap.get(CRServo.class, "slideservo");
         slide = hardwareMap.get(DcMotor.class, "slide");
         spinner = hardwareMap.get(DcMotor.class, "spinner");
+        telemetryUpdateLine(44);
         spinner.setDirection(DcMotorSimple.Direction.FORWARD);
+        telemetryUpdateLine(46);
         // We want to turn off velocity control for auto
         // Velocity control per wheel is not necessary outside of motion profiled auto
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetryUpdateLine(50);
         Trajectory t1 = drive.trajectoryBuilder(new Pose2d())
                 .forward(7)
                 .build();
@@ -52,9 +60,11 @@ public class BasicOcMode_6SouthWestCorner extends LinearOpMode {
         Trajectory t4 = drive.trajectoryBuilder(new Pose2d())
                 .forward(24)
                 .build();
+        telemetryUpdateLine(63);
         // Retrieve our pose from the PoseStorage.currentPose static field
         // See AutoTransferPose.java for further details
         drive.setPoseEstimate(PoseStorage.currentPose);
+        telemetryUpdateLine(67);
 
         waitForStart();
         boolean stop = false;
@@ -75,6 +85,7 @@ public class BasicOcMode_6SouthWestCorner extends LinearOpMode {
             sleep(2000);
             slide.setPower(1);
             sleep(1500);
+            slide.setPower(0);
             slideServo.setPower(1);
             sleep(1000);
             slideServo.setPower(0);
@@ -82,15 +93,13 @@ public class BasicOcMode_6SouthWestCorner extends LinearOpMode {
             sleep(1000);
             drive.followTrajectory(t1);
             sleep(10000);
-
-
             stop = true;
-
-
-
-
-
            stop();
         }
+    }
+    public void telemetryUpdateLine(int line) {
+        telemetry.addData("Status", "Line: " + line);
+        telemetry.update();
+        sleep(500);
     }
 }

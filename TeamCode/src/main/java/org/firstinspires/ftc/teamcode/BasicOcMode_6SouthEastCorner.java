@@ -74,21 +74,15 @@ public class BasicOcMode_6SouthEastCorner extends LinearOpMode {
             sleep(2000);
             slide.setPower(1);
             sleep(1500);
+            slide.setPower(0);
             slideServo.setPower(1);
             sleep(1000);
             slideServo.setPower(0);
-            drive.turn(-    30);
+            drive.turn(-30);
             sleep(1000);
             drive.followTrajectory(t1);
             sleep(10000);
-
-
             stop = true;
-
-
-
-
-
            stop();
         }
     }

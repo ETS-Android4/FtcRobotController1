@@ -224,20 +224,6 @@ public class BasicOpMode_Omnidirectional extends OpMode
         speedMultiplier = Range.clip((1.25 - gamepad1.left_trigger), 0, 1);
         GP2speedMultiplier = Range.clip((1.25 - gamepad2.left_trigger), 0, 1);
 
-        //Strafing
-        /*if (gamepad1.left_bumper) {
-            leftBackDrive.setPower(1 * speedMultiplier);
-            leftFrontDrive.setPower(-1 * speedMultiplier);
-            rightFrontDrive.setPower(1 * speedMultiplier);
-            rightBackDrive.setPower(-1 * speedMultiplier);
-        }
-        if (gamepad1.right_bumper) {
-            leftBackDrive.setPower(-1 * speedMultiplier);
-            leftFrontDrive.setPower(1 * speedMultiplier);
-            rightFrontDrive.setPower(-1 * speedMultiplier);
-            rightBackDrive.setPower(1 * speedMultiplier);
-        }*/
-
         // Send calculated power to wheels
         if (gamepad1.y) {
             leftBackDrive.setPower(1 * speedMultiplier);
@@ -250,10 +236,10 @@ public class BasicOpMode_Omnidirectional extends OpMode
             leftFrontDrive.setPower(1 * speedMultiplier);
             rightFrontDrive.setPower(1 * speedMultiplier);
         } else {
-            leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
+            leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y * 0.7) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
             rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) + gamepad1.right_stick_x), -1, 1) * speedMultiplier);
-            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) + (gamepad1.right_stick_x * 0.7)), -1, 1) * speedMultiplier);
-            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) - (gamepad1.right_stick_x * 0.7)), -1, 1) * speedMultiplier);
+            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y * 0.7) + (gamepad1.right_stick_x * 0.4)), -1, 1) * speedMultiplier);
+            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) - (gamepad1.right_stick_x * 0.4)), -1, 1) * speedMultiplier);
         }
 
 
