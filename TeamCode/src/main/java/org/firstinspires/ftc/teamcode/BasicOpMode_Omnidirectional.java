@@ -252,9 +252,8 @@ public class BasicOpMode_Omnidirectional extends OpMode
         } else {
             leftBackDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
             rightBackDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) + gamepad1.right_stick_x), -1, 1) * speedMultiplier);
-            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) + gamepad1.right_stick_x), -1, 1) * speedMultiplier);
-            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) - gamepad1.right_stick_x), -1, 1) * speedMultiplier);
-
+            leftFrontDrive.setPower(Range.clip((gamepad1.left_stick_x - (gamepad1.right_stick_y) + (gamepad1.right_stick_x * 0.7)), -1, 1) * speedMultiplier);
+            rightFrontDrive.setPower(Range.clip((-gamepad1.left_stick_x - (gamepad1.right_stick_y) - (gamepad1.right_stick_x * 0.7)), -1, 1) * speedMultiplier);
         }
 
 

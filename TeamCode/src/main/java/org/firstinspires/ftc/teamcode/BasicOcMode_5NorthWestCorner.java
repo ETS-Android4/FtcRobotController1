@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
  * <p>
  * This opmode is essentially just LocalizationTest.java with a few additions and comments.
  */
-@Autonomous(group = "advanced")
+@Autonomous(group = "org/firstinspires/ftc/teamcode/advanced")
 public class BasicOcMode_5NorthWestCorner extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();

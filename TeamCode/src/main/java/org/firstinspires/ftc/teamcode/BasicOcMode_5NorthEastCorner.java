@@ -9,8 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**
  * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without
@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
  * <p>
  * This opmode is essentially just LocalizationTest.java with a few additions and comments.
  */
-@Autonomous(group = "advanced")
+@Autonomous(group = "org/firstinspires/ftc/teamcode/advanced")
 public class BasicOcMode_5NorthEastCorner extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
